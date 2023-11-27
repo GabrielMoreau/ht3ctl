@@ -1,0 +1,170 @@
+#!/bin/bash
+#                                                                                   
+# ht3ctl: simple script to switch mono/hyper-threading mode without need to reboot the machine 
+#
+# Copyright (C) 2016-2023, LEGI UMR 5519 / CNRS UGA G-INP, Grenoble, France
+#
+# On an initial idea from BULL SAS
+# 2016/07/07 Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr> - rewrite variable calculus, nbcore...
+# 2023/03/09 Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr> - rename, boost...
+# 2023/11/24 Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr> - move to git and rewrite many part
+
+set -e
+
+################################################################
+
+usage() {
+	cat <<'END'
+Usage: ht3ctl [ht|nbcore|boost]
+  ht3ctl ht [on|off]    # reports or enable/disable HyperThreading setting (on/off)
+  ht3ctl nbcore         # reports number of real core (without HT) and total of active thread
+  ht3ctl boost [on|off] # reports or enable/disable boost bios support
+  ht3ctl help
+END
+}
+
+################################################################
+
+check_privilege() {
+	if [ ! -w '/sys/devices/system/cpu/cpu1/online' ]
+	then
+		echo 'You must have root privilege!'
+		exit 2
+	fi
+}
+
+################################################################
+
+set_hyperthreading_on() {
+	RE_ACTIVE_THREAD=$(cd /sys/devices/system/cpu ; ls -d1 cpu[0-9]*/topology \
+		| cut -f 1 -d '/' \
+		| sed -e 's/^cpu//;' \
+		| paste -sd '|')
+	while read coreindex
+	do
+		[ -f "/sys/devices/system/cpu/cpu${coreindex}/online" ] && echo 1 > /sys/devices/system/cpu/cpu${coreindex}/online 2>/dev/null
+	done < <( (cd /sys/devices/system/cpu ; ls -d1 cpu[0-9]* | sed -e 's/^cpu//;') | grep -vE "^(${RE_ACTIVE_THREAD})$")
+}
+
+################################################################
+
+set_hyperthreading_off() {
+	while read coreindex
+	do
+		[ -f "/sys/devices/system/cpu/cpu${coreindex}/online" ] && echo 0 > /sys/devices/system/cpu/cpu${coreindex}/online 2>/dev/null
+	done < <(awk -F '[,-]' '{print $2}' /sys/devices/system/cpu/cpu[0-9]*/topology/thread_siblings_list | sort -u)
+}
+
+################################################################
+
+get_hyperthreading() {
+	HT='off'
+	if grep -qE '[,-]' /sys/devices/system/cpu/cpu[0-9]*/topology/thread_siblings_list 2>/dev/null
+	then
+		HT='on'
+	fi
+
+	NB_THREAD=$(ls -d1 /sys/devices/system/cpu/cpu[0-9]* | wc -l)
+	NB_HT_THREAD=$((${NB_THREAD} / 2))
+	ONLINE_THREAD=$(ls -d1 /sys/devices/system/cpu/cpu[0-9]*/topology 2>/dev/null | wc -l)
+
+	if [ ${ONLINE_THREAD} -gt ${NB_HT_THREAD} ] && [ "${HT}" = 'off' ]
+	then
+		echo 'HyperThreading is not supported, check your BIOS settings!'
+		exit 2
+	fi
+
+	echo "${HT}"
+}
+
+################################################################
+
+cmd_hyperthreading() {
+	local status=$1
+
+	HT=$(get_hyperthreading)
+	if echo ${status} | egrep -q '^(on|off)$'
+	then
+		check_privilege
+		if [ "${status}" = 'on' ]
+		then
+			set_hyperthreading_on
+		else
+			set_hyperthreading_off
+		fi
+	else
+		echo "HyperThreading is ${HT}"
+	fi
+}
+
+################################################################
+
+print_boost() {
+	if [ -e '/sys/devices/system/cpu/cpufreq/boost' ]
+	then
+		BOOST='off'
+		[ $(cat '/sys/devices/system/cpu/cpufreq/boost') -eq '1' ] && BOOST='on'
+		echo "Boost is ${BOOST}"
+	else
+		echo 'Boost is not supported, check your BIOS settings!'
+		exit 2
+	fi
+}
+
+################################################################
+
+set_boost() {
+	local status=$1
+
+	if [ -e '/sys/devices/system/cpu/cpufreq/boost' ]
+	then
+		check_privilege
+		if [ "${status}" -eq 'on' ]
+		then
+			echo 1 > /sys/devices/system/cpu/cpufreq/boost
+		else
+			echo 0 > /sys/devices/system/cpu/cpufreq/boost
+		fi
+	else
+		echo 'Boost is not supported, check your BIOS settings!'
+		exit 2
+	fi
+}
+
+################################################################
+
+print_nbcore() {
+	echo $((
+		$(ls -d1 /sys/devices/system/cpu/cpu[0-9]*/topology | wc -l)
+		- ($(grep -E '[,-]' /sys/devices/system/cpu/cpu[0-9]*/topology/thread_siblings_list 2>/dev/null | wc -l) / 2)
+		)) \
+		' ' $(ls -d1 /sys/devices/system/cpu/cpu[0-9]*/topology | wc -l)
+	exit
+}
+
+################################################################
+################################################################
+
+if [ $# -eq 0 ]; then usage; exit 1; fi 
+case $1 in
+	ht)
+		cmd_hyperthreading $2
+		;;
+
+	nbcore)
+		print_nbcore
+		;;
+
+	boost)
+		if echo $2 | egrep -q '^(on|off)$'
+		then
+			set_boost $2
+		else
+			print_boost
+		fi
+		;;
+
+	help|*)
+		usage
+		;;
+esac
