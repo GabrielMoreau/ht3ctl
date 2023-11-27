@@ -11,9 +11,9 @@ _ht3ctl() {
 
    if [[ $COMP_CWORD -gt 1 && "${COMP_WORDS[1]}" =~ 'ht|boost' ]]
    then
-      COMPREPLY=($(compgen -W "$(/usr/bin/ht3ctl help | grep "^ ht3ctl ${COMP_WORDS[1]}" | awk '{print $3}' | sed -e 's/[^[:alpha:]]/ /g;')" -- "$cur"))
+      COMPREPLY=($(compgen -W "$(/usr/bin/ht3ctl help | grep "^ ht3ctl ${COMP_WORDS[1]}" | awk '{print $3}' | sed -e 's/|/ /g; s/[^[:alpha:][:space:]]//g;'  | tr -d '\n')" -- "$cur"))
    elif [[ $COMP_CWORD -eq 1 ]]
    then
-      COMPREPLY=($(compgen -W "$(/usr/bin/ht3ctl help | grep '^ ht3ctl' | awk '{print $2}' | xargs echo -n)" -- "$cur"))
+      COMPREPLY=($(compgen -W "$(/usr/bin/ht3ctl help | grep '^ ht3ctl [[:alpha:]]' | awk '{print $2}' | xargs echo -n)" -- "$cur"))
    fi
    } && complete -F _ht3ctl ht3ctl

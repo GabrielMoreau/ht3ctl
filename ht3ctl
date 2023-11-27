@@ -11,17 +11,27 @@
 
 set -e
 
-export VERSION=0.9.1
+export VERSION=0.9.2
 
 ################################################################
 
 usage() {
 	cat <<'END'
-Usage: ht3ctl [ht|nbcore|boost]
+NAME
+ ht3ctl - enable or disable hyperthreading and boost on computer
+
+SYNOPSIS
  ht3ctl ht [on|off]    # reports or enable/disable HyperThreading setting (on/off)
  ht3ctl nbcore         # reports number of real core (without HT) and total of active thread
  ht3ctl boost [on|off] # reports or enable/disable boost bios support
  ht3ctl help
+
+AUTHOR
+ Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr>
+
+COPYRIGHT
+ Copyright (C) 2016-2023, LEGI UMR 5519 / CNRS UGA G-INP, Grenoble, France
+ Licence : CC0
 END
 }
 
@@ -182,7 +192,7 @@ __END__
 
 =head1 NAME
 
-ht3ctl - HyperThreading Core CPU Control
+ht3ctl - enable or disable hyperthreading and boost on computer
 
 =head1 SYNOPSIS
 
@@ -193,8 +203,24 @@ ht3ctl - HyperThreading Core CPU Control
 
 =head1 DESCRIPTION
 
-`ht3ctl` is a simple script to change mono/hyper-threading mode without rebooting the machine.
-It can also enable or disable BIOS `boost` mode.
+C<ht3ctl> mean HyperThreading Core CPU Control.
+This is a simple script that allows you to change the hyper-threading mode of the cores (enabled or disabled) without rebooting the machine.
+It can also enable or disable the global CPU boost mode in the BIOS.
+
+
+=head1 SEE ALSO
+
+Own project ressources:
+
+=over
+
+=item * L<Web site (source code)|https://gricad-gitlab.univ-grenoble-alpes.fr/legi/soft/trokata/ht3ctl>
+
+=item * L<Online Manual|https://legi.gricad-pages.univ-grenoble-alpes.fr/soft/trokata/ht3ctl/>
+
+=item * L<Download package (Debian)|https://legi.gricad-pages.univ-grenoble-alpes.fr/soft/trokata/ht3ctl/download/>
+
+=back
 
 
 =head1 AUTHOR

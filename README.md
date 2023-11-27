@@ -11,15 +11,17 @@ ht3ctl ht|nbcore|boost
 # COMMAND
 
 ```bash
-    ht3ctl ht [on|off]    # reports or enable/disable HyperThreading setting (on/off)
-    ht3ctl nbcore         # reports number of real core (without HT) and total of active thread
-    ht3ctl boost [on|off] # reports or enable/disable boost bios support
-    ht3ctl help
+ht3ctl ht [on|off]    # reports or enable/disable HyperThreading setting (on/off)
+ht3ctl nbcore         # reports number of real core (without HT) and total of active thread
+ht3ctl boost [on|off] # reports or enable/disable boost bios support
+ht3ctl help
 ```
 
 `ht3ctl` mean HyperThreading Core CPU Control.
 This is a simple script that allows you to change the hyper-threading mode of the cores (enabled or disabled) without rebooting the machine.
 It can also enable or disable the global CPU boost mode in the BIOS.
+
+The [online manual](https://legi.gricad-pages.univ-grenoble-alpes.fr/soft/trokata/ht3ctl/) is always uptodate at the last version.
 
 # DOWNLOAD
 
@@ -42,7 +44,7 @@ git pull
 ## Debian package
 
 Debian is a GNU/Linux distribution.
-Debian (and certainly Ubuntu) package for amd64 arch could be download on: https://legi.gricad-pages.univ-grenoble-alpes.fr/soft/trokata/ht3ctl/download.
+Debian (and certainly Ubuntu) packages for all arch (Bash script) could be download on: https://legi.gricad-pages.univ-grenoble-alpes.fr/soft/trokata/ht3ctl/download.
 You can then install it with
 
 ```bash
