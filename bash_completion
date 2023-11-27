@@ -1,0 +1,19 @@
+# bash completion for ht3ctl
+
+have ht3ctl &&
+_ht3ctl() {
+   local cur prev
+
+   COMPREPLY=()
+   #_get_comp_words_by_ref cur prev
+   cur="${COMP_WORDS[COMP_CWORD]}"
+   prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+   if [[ $COMP_CWORD -gt 1 && "${COMP_WORDS[1]}" =~ 'ht|boost' ]]
+   then
+      COMPREPLY=($(compgen -W "$(/usr/bin/ht3ctl help | grep "^ ht3ctl ${COMP_WORDS[1]}" | awk '{print $3}' | sed -e 's/[^[:alpha:]]/ /g;')" -- "$cur"))
+   elif [[ $COMP_CWORD -eq 1 ]]
+   then
+      COMPREPLY=($(compgen -W "$(/usr/bin/ht3ctl help | grep '^ ht3ctl' | awk '{print $2}' | xargs echo -n)" -- "$cur"))
+   fi
+   } && complete -F _ht3ctl ht3ctl

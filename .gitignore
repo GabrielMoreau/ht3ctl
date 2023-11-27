@@ -1,0 +1,5 @@
+*.deb
+*.1.gz
+*.html
+*.tmp
+public/
