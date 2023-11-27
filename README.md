@@ -1,6 +1,6 @@
 # NAME
 
-ht3ctl - HyperThreading Core CPU Control
+ht3ctl - enable or disable hyperthreading and boost on computer
 
 # SYNOPSIS
 
@@ -17,8 +17,40 @@ ht3ctl ht|nbcore|boost
     ht3ctl help
 ```
 
-`ht3ctl` is a simple script to change mono/hyper-threading mode without rebooting the machine.
-It can also enable or disable BIOS `boost` mode.
+`ht3ctl` mean HyperThreading Core CPU Control.
+This is a simple script that allows you to change the hyper-threading mode of the cores (enabled or disabled) without rebooting the machine.
+It can also enable or disable the global CPU boost mode in the BIOS.
+
+# DOWNLOAD
+
+## Software repository
+
+All code is under free license (See below).
+All sources are available on the Grenoble campus forge: https://gricad-gitlab.univ-grenoble-alpes.fr/legi/soft/trokata/ht3ctl
+
+The sources are managed via `git`.
+It is very easy to stay synchronized with these sources
+
+```bash
+# initial recovery
+git clone https://gricad-gitlab.univ-grenoble-alpes.fr/legi/soft/trokata/ht3ctl
+
+# the updates thereafter
+git pull
+```
+
+## Debian package
+
+Debian is a GNU/Linux distribution.
+Debian (and certainly Ubuntu) package for amd64 arch could be download on: https://legi.gricad-pages.univ-grenoble-alpes.fr/soft/trokata/ht3ctl/download.
+You can then install it with
+
+```bash
+sudo dpkg -i ht3ctl_*_amd64.deb
+```
+
+(just replace * with the version you have donwloaded).
+
 
 # AUTHOR
 
