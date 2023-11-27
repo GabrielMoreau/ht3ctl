@@ -16,23 +16,20 @@ export VERSION=0.9.2
 ################################################################
 
 usage() {
-	cat <<'END'
-NAME
+	cat <<END_USAGE
+Name
  ht3ctl - enable or disable hyperthreading and boost on computer
 
-SYNOPSIS
  ht3ctl ht [on|off]    # reports or enable/disable HyperThreading setting (on/off)
  ht3ctl nbcore         # reports number of real core (without HT) and total of active thread
  ht3ctl boost [on|off] # reports or enable/disable boost bios support
  ht3ctl help
 
-AUTHOR
- Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr>
-
-COPYRIGHT
- Copyright (C) 2016-2023, LEGI UMR 5519 / CNRS UGA G-INP, Grenoble, France
- Licence : CC0
-END
+Copyright (C) 2016-2023, LEGI UMR 5519 / CNRS UGA G-INP, Grenoble, France
+ Author:  Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr>
+ Licence: CC0
+ Version: ${VERSION}
+END_USAGE
 }
 
 ################################################################
