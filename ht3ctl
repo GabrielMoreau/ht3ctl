@@ -11,7 +11,7 @@
 
 set -e
 
-export VERSION=0.9.4
+export VERSION=0.9.5
 
 ################################################################
 
@@ -80,7 +80,7 @@ get_hyperthreading() {
 	if [ ${ONLINE_THREAD} -gt ${NB_HT_THREAD} ] && [ "${HT}" = 'off' ]
 	then
 		echo 'Error: HyperThreading is not supported, check your BIOS settings!' 1>&2
-		exit 2
+		exit 3
 	fi
 
 	echo "${HT}"
@@ -116,7 +116,7 @@ print_boost() {
 		echo "Boost is ${BOOST}"
 	else
 		echo 'Error: Boost is not supported by your hardware, please check your BIOS settings!' 1>&2
-		exit 2
+		exit 4
 	fi
 }
 
@@ -136,7 +136,7 @@ set_boost() {
 		fi
 	else
 		echo 'Error: Boost is not supported by your hardware, please check your BIOS settings!' 1>&2
-		exit 2
+		exit 4
 	fi
 }
 
