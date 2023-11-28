@@ -11,7 +11,7 @@
 
 set -e
 
-export VERSION=0.9.3
+export VERSION=0.9.4
 
 ################################################################
 
@@ -37,7 +37,7 @@ END_USAGE
 check_privilege() {
 	if [ ! -w '/sys/devices/system/cpu/cpu1/online' ]
 	then
-		echo 'You must have root privilege!'
+		echo 'Error: You must have root privilege!'  1>&2
 		exit 2
 	fi
 }
@@ -79,7 +79,7 @@ get_hyperthreading() {
 
 	if [ ${ONLINE_THREAD} -gt ${NB_HT_THREAD} ] && [ "${HT}" = 'off' ]
 	then
-		echo 'HyperThreading is not supported, check your BIOS settings!'
+		echo 'Error: HyperThreading is not supported, check your BIOS settings!' 1>&2
 		exit 2
 	fi
 
@@ -115,7 +115,7 @@ print_boost() {
 		[ $(cat '/sys/devices/system/cpu/cpufreq/boost') -eq '1' ] && BOOST='on'
 		echo "Boost is ${BOOST}"
 	else
-		echo 'Boost is not supported, check your BIOS settings!'
+		echo 'Error: Boost is not supported by your hardware, please check your BIOS settings!' 1>&2
 		exit 2
 	fi
 }
@@ -135,7 +135,7 @@ set_boost() {
 			echo 0 > /sys/devices/system/cpu/cpufreq/boost
 		fi
 	else
-		echo 'Boost is not supported, check your BIOS settings!'
+		echo 'Error: Boost is not supported by your hardware, please check your BIOS settings!' 1>&2
 		exit 2
 	fi
 }
@@ -148,7 +148,7 @@ print_nbcore() {
 		- ($(grep -E '[,-]' /sys/devices/system/cpu/cpu[0-9]*/topology/thread_siblings_list 2>/dev/null | wc -l) / 2)
 		)) \
 		' ' $(ls -d1 /sys/devices/system/cpu/cpu[0-9]*/topology | wc -l)
-	exit
+	exit 0
 }
 
 ################################################################
