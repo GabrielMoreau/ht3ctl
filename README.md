@@ -60,6 +60,6 @@ Written by Gabriel Moreau <Gabriel.Moreau@univ-grenoble-alpes.fr>, Grenoble - Fr
 
 # COPYRIGHT
 
-Copyright (C) 2016-2023, LEGI UMR 5519 / CNRS UGA G-INP, Grenoble, France
+Copyright (C) 2017-2024, LEGI UMR 5519 / CNRS UGA G-INP, Grenoble, France
 
 Licence: CC0 (Creative Commons Zero - https://spdx.org/licenses/CC0-1.0)
